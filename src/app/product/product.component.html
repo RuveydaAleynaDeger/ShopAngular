@@ -5,9 +5,11 @@
     class="form-control"
     id="productName"
     placeholder="Arama metninizi giriniz."
+    [(ngModel)]="filterText"
+
   />
-  <div id="emailHelp" class="form-text">
-    We'll never share your email with anyone else.
+  <div *ngIf="filterText" class="form-text">
+   Şuan <strong>{{filterText}}</strong> aradınız
   </div>
 </div>
 
@@ -17,7 +19,7 @@
       Bu kategoride ürün yoktur!
     </div>
   </ng-template>
-  <div *ngFor="let product of products" class="card" style="width: 18rem">
+  <div *ngFor="let product of products | productFilter:filterText" class="card" style="width: 18rem">
     <img [src]="product.imageUrl" class="card-img-top" alt="..." />
     <div class="card-body">
       <h5 class="card-title">
@@ -26,7 +28,7 @@
       <p class="card-text">
         {{ product.description }}
       </p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
+      <a (click)="addToCart(product)" class="btn btn-primary">Sepete Ekle</a>
     </div>
   </div>
 </div>

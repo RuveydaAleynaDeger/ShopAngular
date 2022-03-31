@@ -1,58 +1,39 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from './product';
+import { AlertifyService } from '../services/alertify.service';
+import { ProductService } from '../services/product.service';
+import { ActivatedRoute } from '@angular/router';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css'],
+  providers: [ProductService],
 })
 export class ProductComponent implements OnInit {
-  constructor() {}
+  constructor(
+    private alertifyService: AlertifyService,
+    private productService: ProductService,
+    private activatedRoute:ActivatedRoute
+  ) {}
   title = 'Ürün Listesi';
-  products: Product[] = [
-    {
-      id: 1,
-      name: 'Laptop',
-      price: 2500,
-      categoryId: 1,
-      description: 'Asus ZenBook',
-      imageUrl: 'https://media.istockphoto.com/photos/woman-working-at-home-and-reading-emails-on-her-laptop-picture-id1330800043',
-    },
-    {
-      id: 1,
-      name: 'Laptop',
-      price: 2500,
-      categoryId: 1,
-      description: 'Asus ZenBook',
-      imageUrl: 'https://media.istockphoto.com/photos/woman-working-at-home-and-reading-emails-on-her-laptop-picture-id1330800043',
-    },
+  filterText = '';
+  products!: Product[];
 
-    {
-      id: 1,
-      name: 'Laptop',
-      price: 2500,
-      categoryId: 1,
-      description: 'Asus ZenBook',
-      imageUrl: 'https://media.istockphoto.com/photos/woman-working-at-home-and-reading-emails-on-her-laptop-picture-id1330800043',
-    },
-    {
-      id: 1,
-      name: 'Laptop',
-      price: 2500,
-      categoryId: 1,
-      description: 'Asus ZenBook',
-      imageUrl: 'https://media.istockphoto.com/photos/woman-working-at-home-and-reading-emails-on-her-laptop-picture-id1330800043',
-    },
-    {
-      id: 1,
-      name: 'Laptop',
-      price: 2500,
-      categoryId: 1,
-      description: 'Asus ZenBook',
-      imageUrl: 'https://media.istockphoto.com/photos/woman-working-at-home-and-reading-emails-on-her-laptop-picture-id1330800043',
-    },
+  ngOnInit(): void {
 
-    
-  ];
-  ngOnInit(): void {}
+    this.activatedRoute.params.subscribe(params  => {
+      
+      this.productService.getProducts(params["categoryId"]).subscribe((data) => {
+
+
+        this.products = data;
+      });
+    })
+   
+  }
+  addToCart(product: Product) {
+    this.alertifyService.success(product.name + ' added');
+  }
 }
